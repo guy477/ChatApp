@@ -30,8 +30,27 @@ Each service is designed to run on its own server instance, though for now they'
 - Python manages the database stuff
 - TypeScript/React gives us a nice frontend
 
-#### Micro-Service, Stateless, API, MVC, and all those buzzwords...
-Blogs, articles, tutorials, and the like all throw around these buzzwords; but what do they really mean? If you know the answer, there's no need to read this. If you don't and feel overwhelmed, start with APIs. If APIs don't make too much sense, learn Model-View-Controllers. If you're still lost, learn about OOP or build a simple app with multiple components in a language you're comfortable with. As you build more, you'll start to see how these buzzwords are more or less the same concept applied to different applications or components. For example, in this chat app, the Python service follows MVC patterns to handle data, while exposing an API that the Go service can call - showing how these concepts naturally flow together in practice.
+#### Understanding Software Architecture Patterns
+Modern software development relies heavily on established patterns and principles that promote modularity, scalability, and maintainability. While terms like "microservices," "stateless," and "MVC" might seem like buzzwords, they represent fundamental architectural concepts that solve specific problems:
+
+- **APIs (Application Programming Interfaces)** define standardized ways for software components to communicate, whether between microservices, frontend-backend, or third-party integrations.
+
+- **MVC (Model-View-Controller)** separates concerns in applications:
+  - Models handle data and business logic
+  - Views present information to users
+  - Controllers coordinate between models and views
+
+- **Microservices** break down complex applications into independent, specialized services that communicate via APIs. This enables:
+  - Independent scaling and deployment
+  - Technology stack flexibility per service
+  - Isolated failure domains
+
+In this project, these patterns work together naturally. For example:
+- The Python service implements MVC internally to manage chat data (separation of concerns)
+- It exposes this functionality through a REST API (interface)
+- The Go service consumes this API as part of the larger microservice architecture
+
+The common thread is interfaces - well-defined boundaries between components that enable modularity and flexibility. Whether you're designing class methods, service APIs, or entire system architectures, thinking in terms of clean interfaces leads to more maintainable and scalable software.
 
 This project is my attempt to put these concepts into practice, even if it's just a simple chat app for now.
 
