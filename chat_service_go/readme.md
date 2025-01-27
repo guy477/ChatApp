@@ -9,3 +9,7 @@ sudo apt-get install golang-go
 ```sh
 go run main.go
 ```
+
+## Other Requirements
+- [ollama](https://ollama.ai/docs/install)
+

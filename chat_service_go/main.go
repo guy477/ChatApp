@@ -11,6 +11,10 @@ func main() {
 	// Initialize logger
 	logger := _utils.NewLogger()
 
+	// Initialize configuration
+	// If Ollama is hosted on a different machine, change its endpoint in config.go
+	_utils.InitConfig()
+
 	// Set up routes
 	http.HandleFunc("/api/chat", controllers.HandleChat(logger))
 

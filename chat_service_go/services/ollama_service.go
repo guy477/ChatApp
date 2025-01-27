@@ -2,6 +2,7 @@ package services
 
 import (
 	"chat_service_go/models"
+	"chat_service_go/_utils"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -9,8 +10,6 @@ import (
 	"net/http"
 	"time"
 )
-
-const ollamaURL = "http://localhost:11434/api/chat"
 
 func CallOllamaChat(model string, msgs []models.Message, w http.ResponseWriter) (string, error) {
 	// Convert messages to Ollama format
@@ -32,7 +31,7 @@ func CallOllamaChat(model string, msgs []models.Message, w http.ResponseWriter) 
 		return "", err
 	}
 
-	req, err := http.NewRequest("POST", ollamaURL, bodyBuf)
+	req, err := http.NewRequest("POST", _utils.AppConfig.OllamaURL, bodyBuf)
 	if err != nil {
 		return "", err
 	}
