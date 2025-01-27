@@ -18,19 +18,19 @@ This project is collection of micro-services designed to serve open-source LLMs 
 
 ## Why?
 
-#### At A High Level...
+### At A High Level...
 I just discovered how great GoLang is for servicing apps that you intend to scale. The way it handles concurrent requests and its performance benefits made me rethink how I structure my applications.
 
-#### From A Place Of Honesty...
+### From A Place Of Honesty...
 This evening, everything clicked as I was digging through the back-end of Ollama. I asked myself: "Why am I forcing myself to serve web-apps using Python? Especially when the Python application would just be a wrapper for the GoLang application (Ollama)?". After seeing how many successful services use GoLang (Tailscale, Paypal, Netflix), I figured I'd lean into this micro-service approach instead of trying to do everything in Python.
 
-#### About The Architecture
+### About The Architecture...
 Each service is designed to run on its own server instance, though for now they're all running locally. The idea is that as the app grows, we can scale each part independently:
 - Go service handles the traffic, routing, and streaming
 - Python manages the database stuff
 - TypeScript/React gives us a nice frontend
 
-#### Understanding Software Architecture Patterns
+### My Understanding Of Software Architecture Patterns...
 Modern software development relies heavily on established patterns and principles that promote modularity, scalability, and maintainability. While terms like "microservices," "stateless," and "MVC" might seem like buzzwords, they represent fundamental architectural concepts that solve specific problems:
 
 - **APIs (Application Programming Interfaces)** define standardized ways for software components to communicate, whether between microservices, frontend-backend, or third-party integrations.
