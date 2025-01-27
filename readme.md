@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a collection of micro-services to serve a chat application. Each service handles a specific part of the chat system, making it easier to maintain and scale independently.
+This project is collection of micro-services designed to serve open-source LLMs to a UI and maintain histories in databases. Each service handles a specific part of the chat system, making it easier to maintain and scale independently.
 
 ## Built With
 
