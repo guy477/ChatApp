@@ -32,3 +32,10 @@ npm create vite@latest "frontend" -- --template react-ts
 cd frontend
 npm install
 ```
+
+
+# Future
+- [ ] Is there something better than Vite?
+- [ ] Auth layer
+- [ ] How can I make this more modular?
+- [ ] How can I make this more attractive?
