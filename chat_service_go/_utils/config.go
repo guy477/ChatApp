@@ -10,6 +10,6 @@ var AppConfig Config
 // InitConfig initializes application configuration
 func InitConfig() {
 	AppConfig = Config{
-		OllamaURL: "http://localhost:11434/api/chat", // default value
+		OllamaURL: "http://packapunch-b550m-ds3h-ac.tail83fc6.ts.net:11434/api/chat", // default value
 	}
 } 

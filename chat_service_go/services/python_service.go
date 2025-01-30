@@ -7,9 +7,17 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 )
 
-const pythonBaseURL = "http://localhost:8000"
+var pythonBaseURL = getPythonServiceURL()
+
+func getPythonServiceURL() string {
+	if url := os.Getenv("PYTHON_SERVICE_URL"); url != "" {
+		return url
+	}
+	return "http://python-service:8000"
+}
 
 func PythonCreateUserIfNotExists(userID string) error {
 	url := fmt.Sprintf("%s/users/%s", pythonBaseURL, userID)

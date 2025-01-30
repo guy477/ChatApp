@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 function App() {
   // Basic user inputs for demonstration
@@ -19,7 +19,7 @@ function App() {
       setConversation(prev => prev + `User: ${userMessage}\n`);
       
       // Create EventSource for SSE
-      const response = await fetch("http://localhost:3000/api/chat", {
+      const response = await fetch("http://localhost:30000/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
