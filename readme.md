@@ -8,13 +8,13 @@ This project is collection of micro-services designed to serve open-source LLMs 
 
 - GoLang (1.18+)
 - Python (3.11)
-- TypeScript (20)
+- HTML/CSS/JS
 
 ## Deployable Services
 
 - [chat_service_go](chat_service_go/readme.md): Handles user requests, talking to other services, and streaming responses
 - [chat_service_python](chat_service_python/readme.md): Manages the database and chat history
-- [chat_service_typescript](chat_service_typescript/readme.md): The frontend where users interact
+- [chat_service_html](chat_service_html/readme.md): The frontend where users interact
 
 ## Why?
 
@@ -28,7 +28,7 @@ This evening, everything clicked as I was digging through the back-end of Ollama
 Each service is designed to run on its own server instance, though for now they're all running locally. The idea is that as the app grows, we can scale each part independently:
 - Go service handles the traffic, routing, and streaming
 - Python manages the database stuff
-- TypeScript/React gives us a nice frontend
+- HTML gives us a simple, classic frontend
 
 ### My Understanding Of Software Architecture Patterns...
 Modern software development relies heavily on established patterns and principles that promote modularity, scalability, and maintainability. While terms like "microservices," "stateless," and "MVC" might seem like buzzwords, they represent fundamental architectural concepts that solve specific problems:
