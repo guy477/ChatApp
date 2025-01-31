@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Minimal Chat Demo</title>
+  <!-- Add marked.js for markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     body {
       max-width: 600px;
@@ -18,10 +20,28 @@
       padding: 8px;
       height: 300px;
       overflow-y: auto;
-      white-space: pre-wrap;
+    }
+    /* Add styles for markdown content */
+    .conversation pre {
+      background-color: #f6f8fa;
+      padding: 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    .conversation code {
+      background-color: #f6f8fa;
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+    }
+    .conversation p {
+      margin: 8px 0;
     }
     button {
       margin-bottom: 16px;
+    }
+    .conversation div {
+      font-size: 14px;
+      line-height: 1.4;
     }
   </style>
 </head>
@@ -67,8 +87,13 @@
         message: userMessage
       };
 
-      // View: Update conversation with user message
-      conversation.textContent += `User: ${userMessage}\n`;
+      // View: Create a new message container for user message
+      const userDiv = document.createElement('div');
+      const userContent = document.createElement('div');
+      userDiv.innerHTML = '<strong>User:</strong> ';
+      userContent.innerHTML = marked.parse(userMessage);
+      userDiv.appendChild(userContent);
+      conversation.appendChild(userDiv);
 
       try {
         const response = await fetch("http://localhost:30000/api/chat", {
@@ -83,33 +108,30 @@
           throw new Error("ReadableStream not supported");
         }
 
-        // View: Prepare for assistant's response
-        conversation.textContent += "Assistant: ";
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
         let done = false;
+        let assistantResponse = '';
+
+        // View: Create a new message container for assistant's response
+        const assistantDiv = document.createElement('div');
+        const assistantContent = document.createElement('div');
+        assistantDiv.innerHTML = '<strong>Assistant:</strong> ';
+        assistantDiv.appendChild(assistantContent);
+        conversation.appendChild(assistantDiv);
 
         while (!done) {
           const { value, done: doneReading } = await reader.read();
           done = doneReading;
           const chunk = decoder.decode(value, { stream: true });
-          const events = chunk.split('\n\n').filter(Boolean);
-
-          events.forEach(event => {
-            if (event.startsWith('data: ')) {
-              const content = event.slice(6);
-              console.log('Assistant response chunk:', content);
-              conversation.textContent += content;
-            } else if (event.startsWith('event: error')) {
-              const errorMsg = event.split('\n')[1]?.slice(6) || 'Unknown error';
-              console.error('Server error:', errorMsg);
-              throw new Error(errorMsg);
-            }
-          });
+          assistantResponse += chunk;
+          
+          // Update only the content div with markdown parsing
+          assistantContent.innerHTML = marked.parse(assistantResponse);
         }
 
-        // View: Finalize assistant's response
-        conversation.textContent += "\n\n";
+        // Add spacing after the response
+        conversation.appendChild(document.createElement('br'));
         document.getElementById('userMessage').value = "";
 
       } catch (error) {

@@ -53,6 +53,11 @@ func CallOllamaChat(model string, msgs []models.Message, w http.ResponseWriter) 
 
 	// Stream response to client and accumulate assistant's response
 	var assistantResponse string
+
+	// Set headers for streaming response
+	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Transfer-Encoding", "chunked")
+
 	dec := json.NewDecoder(resp.Body)
 
 	for {
@@ -67,6 +72,7 @@ func CallOllamaChat(model string, msgs []models.Message, w http.ResponseWriter) 
 		}
 		err = dec.Decode(&chunk)
 		if err == io.EOF {
+			// Send EOF signal if needed (optional)
 			break
 		}
 		if err != nil {
@@ -76,8 +82,12 @@ func CallOllamaChat(model string, msgs []models.Message, w http.ResponseWriter) 
 		// Accumulate partial content
 		assistantResponse += chunk.Message.Content
 
-		// Send as SSE event
-		fmt.Fprintf(w, "data: %s\n\n", chunk.Message.Content)
+		// Send raw content
+		_, err = fmt.Fprintf(w, "%s", chunk.Message.Content)
+		if err != nil {
+			return "", fmt.Errorf("writing to response: %v", err)
+		}
+
 		if flusher, ok := w.(http.Flusher); ok {
 			flusher.Flush()
 		}
