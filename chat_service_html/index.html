@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Minimal Chat Demo</title>
+  <style>
+    body {
+      max-width: 600px;
+      margin: auto;
+      padding: 16px;
+      font-family: Arial, sans-serif;
+    }
+    .input-group {
+      margin-bottom: 8px;
+    }
+    .conversation {
+      border: 1px solid #ccc;
+      padding: 8px;
+      height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    button {
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Minimal Chat Demo</h1>
+
+  <div class="input-group">
+    <label for="userId">User ID:</label>
+    <input type="text" id="userId" value="user_123" style="width: 100%; margin-top: 4px;">
+  </div>
+
+  <div class="input-group">
+    <label for="chatId">Chat ID (optional):</label>
+    <input type="text" id="chatId" placeholder="Leave blank to create a new chat" style="width: 100%; margin-top: 4px;">
+  </div>
+
+  <div class="input-group">
+    <label for="userMessage">Message:</label>
+    <textarea id="userMessage" style="width: 100%; height: 60px; margin-top: 4px;"></textarea>
+  </div>
+
+  <button id="sendButton">Send to Go</button>
+
+  <h2>Conversation</h2>
+  <div class="conversation" id="conversation"></div>
+
+  <script>
+    // Controller: Handles user interactions
+    document.getElementById('sendButton').addEventListener('click', async () => {
+      const userId = document.getElementById('userId').value;
+      const chatId = document.getElementById('chatId').value;
+      const userMessage = document.getElementById('userMessage').value;
+      const conversation = document.getElementById('conversation');
+
+      if (!userMessage.trim()) {
+        alert('Please enter a message.');
+        return;
+      }
+
+      const payload = {
+        user_id: userId,
+        chat_id: chatId,
+        message: userMessage
+      };
+
+      // View: Update conversation with user message
+      conversation.textContent += `User: ${userMessage}\n`;
+
+      try {
+        const response = await fetch("http://localhost:30000/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.body) {
+          throw new Error("ReadableStream not supported");
+        }
+
+        // View: Prepare for assistant's response
+        conversation.textContent += "Assistant: ";
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let done = false;
+
+        while (!done) {
+          const { value, done: doneReading } = await reader.read();
+          done = doneReading;
+          const chunk = decoder.decode(value, { stream: true });
+          const events = chunk.split('\n\n').filter(Boolean);
+
+          events.forEach(event => {
+            if (event.startsWith('data: ')) {
+              const content = event.slice(6);
+              console.log('Assistant response chunk:', content);
+              conversation.textContent += content;
+            } else if (event.startsWith('event: error')) {
+              const errorMsg = event.split('\n')[1]?.slice(6) || 'Unknown error';
+              console.error('Server error:', errorMsg);
+              throw new Error(errorMsg);
+            }
+          });
+        }
+
+        // View: Finalize assistant's response
+        conversation.textContent += "\n\n";
+        document.getElementById('userMessage').value = "";
+
+      } catch (error) {
+        console.error("Error in handleSend:", error);
+        alert(error.message || error.toString());
+      }
+
+      // Scroll to the bottom of the conversation
+      conversation.scrollTop = conversation.scrollHeight;
+    });
+  </script>
+</body>
+</html> 
