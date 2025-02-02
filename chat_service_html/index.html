@@ -129,9 +129,10 @@
           // Update only the content div with markdown parsing
           assistantContent.innerHTML = marked.parse(assistantResponse);
         }
-
-        // Add spacing after the response
-        conversation.appendChild(document.createElement('br'));
+        
+        // add a separator between User/Assistant interactions
+        conversation.appendChild(document.createElement('hr'));
+        
         document.getElementById('userMessage').value = "";
 
       } catch (error) {
